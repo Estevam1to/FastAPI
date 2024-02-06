@@ -5,18 +5,14 @@ from fastapi.testclient import TestClient
 from fast_zero.app import app
 
 
-def test_root():
-    client = TestClient(app)
-
+def test_root(client):
     response = client.get('/')
 
     assert response.status_code == 200
     assert response.json() == {'message': 'Olá Mundo!'}
 
 
-def test_mundo():
-    client = TestClient(app)
-
+def test_mundo(client):
     response = client.get('/mundo')
 
     assert response.status_code == 200
@@ -37,9 +33,7 @@ def test_mundo():
     )
 
 
-def test_create_user():
-    client = TestClient(app)
-
+def test_create_user(client):
     response = client.post(
         '/users/',
         json={
