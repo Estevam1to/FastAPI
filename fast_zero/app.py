@@ -32,8 +32,10 @@ database = []
 # decorador que define o endpoint que receberá usuários
 @app.post('/users/', status_code=201, response_model=UserPublic)
 def create_user(user: UserSchema):
-    user_with_id = UserDB(**user.model_dump(), id=len(database) + 1)
+    user_with_id = UserDB(**user.model_dump(), id=(len(database) + 1))
 
     database.append(user_with_id)
 
-    return user_with_id
+    return UserPublic(
+        id=user_with_id.id, username=user.username, email=user.email
+    )
