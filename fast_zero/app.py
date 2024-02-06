@@ -24,3 +24,7 @@ def ola_mundo_html():
     <p> Estevam lindão </p>
 </body>
 </html>"""
+
+@app.post('/users/')
+def create_user():
+    pass
