@@ -25,6 +25,8 @@ def ola_mundo_html():
 </body>
 </html>"""
 
-@app.post('/users/')
+
+# decorador que define o endpoint que receberá usuários
+@app.post('/users/', status_code=201)
 def create_user():
     pass

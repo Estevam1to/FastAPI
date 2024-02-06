@@ -35,5 +35,3 @@ def test_mundo():
     assert ''.join(response.content.decode('utf-8').split()) == ''.join(
         textwrap.dedent(expected_content).strip().split()
     )
-
-
