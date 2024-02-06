@@ -20,5 +20,6 @@ class UserPublic(BaseModel):
 class UserDB(BaseModel):
     id: int
 
+
 class UserList(BaseModel):
     users: list[UserPublic]

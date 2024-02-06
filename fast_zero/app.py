@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 
-from fast_zero.schemas import Message, UserDB, UserPublic, UserSchema
+from fast_zero.schemas import Message, UserDB, UserList, UserPublic, UserSchema
 
 app = FastAPI()
 
@@ -39,3 +39,8 @@ def create_user(user: UserSchema):
     return UserPublic(
         id=user_with_id.id, username=user.username, email=user.email
     )
+
+
+@app.get('/users/', response_model=UserList)
+def read_users():
+    return {'users': database}
