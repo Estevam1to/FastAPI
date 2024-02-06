@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 
-from fast_zero.schemas import Message, UserPublic, UserSchema
+from fast_zero.schemas import Message, UserDB, UserPublic, UserSchema
 
 app = FastAPI()
 
@@ -32,4 +32,8 @@ database = []
 # decorador que define o endpoint que receberá usuários
 @app.post('/users/', status_code=201, response_model=UserPublic)
 def create_user(user: UserSchema):
-    return user
+    user_with_id = UserDB(**user.model_dump(), id=len(database) + 1)
+
+    database.append(user_with_id)
+
+    return user_with_id
