@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.responses import HTMLResponse
 
-from fast_zero.schemas import Message
+from fast_zero.schemas import Message, UserPublic, UserSchema
 
 app = FastAPI()
 
@@ -26,7 +26,10 @@ def ola_mundo_html():
 </html>"""
 
 
+# banco provisório
+database = []
+
 # decorador que define o endpoint que receberá usuários
-@app.post('/users/', status_code=201)
-def create_user():
-    pass
+@app.post('/users/', status_code=201, response_model=UserPublic)
+def create_user(user: UserSchema):
+    return user
