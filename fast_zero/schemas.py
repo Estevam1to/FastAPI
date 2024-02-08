@@ -19,6 +19,9 @@ class UserPublic(BaseModel):
 
 class UserDB(BaseModel):
     id: int
+    username: str
+    email: EmailStr
+    password: str
 
 
 class UserList(BaseModel):

@@ -32,7 +32,7 @@ database = []
 # decorador que define o endpoint que receberá usuários
 @app.post('/users/', status_code=201, response_model=UserPublic)
 def create_user(user: UserSchema):
-    user_with_id = UserDB(**user.model_dump(), id=(len(database) + 1))
+    user_with_id = UserDB(id=(len(database) + 1), **user.model_dump())
 
     database.append(user_with_id)
 
@@ -48,9 +48,10 @@ def read_users():
 
 @app.put('/users/{user_id}', response_model=UserPublic)
 def update_user(user_id: int, user: UserSchema):
-    if user_id not in database:
+    if user_id > len(database) or user_id < 1:
         raise HTTPException(status_code=404, detail='User not found')
-    user_with_id = UserDB(**user.model_dump(), id=user_id)
+
+    user_with_id = UserDB(id=user_id, **user.model_dump())
     database[user_id - 1] = user_with_id
 
-    return user_with_id
+    return UserPublic(id=user_id, username=user.username, email=user.email)

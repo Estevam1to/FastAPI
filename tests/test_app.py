@@ -1,9 +1,5 @@
 import textwrap
 
-from fastapi.testclient import TestClient
-
-from fast_zero.app import app
-
 
 def test_root(client):
     response = client.get('/')
@@ -64,4 +60,21 @@ def test_read_users(client):
                 'id': 1,
             }
         ]
+    }
+
+
+def test_update_user(client):
+    response = client.put(
+        '/users/1',
+        json={
+            'username': 'vasco',
+            'email': 'vascodagama@exemplo.com',
+            'password': 'vascocampeao',
+        },
+    )
+    assert response.status_code == 200
+    assert response.json() == {
+        'username': 'vasco',
+        'email': 'vascodagama@exemplo.com',
+        'id': 1,
     }
