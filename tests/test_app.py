@@ -80,6 +80,20 @@ def test_update_user(client):
     }
 
 
+def test_read_user(client):
+    response = client.get('/user/1')
+
+    assert response.status_code == 200
+    assert response.json() == {
+        'user': {
+            'id': 1,
+            'username': 'vasco',
+            'email': 'vascodagama@exemplo.com',
+            'password': 'vascocampeao',
+        }
+    }
+
+
 def test_delete_user(client):
     response = client.delete('/users/1')
 
