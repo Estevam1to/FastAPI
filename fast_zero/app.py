@@ -1,6 +1,10 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
+from sqlalchemy import select
+from sqlalchemy.orm import Session
 
+from fast_zero.database import get_session
+from fast_zero.models import User
 from fast_zero.schemas import Message, UserDB, UserList, UserPublic, UserSchema
 
 app = FastAPI()
@@ -31,14 +35,25 @@ database = []
 
 # decorador que define o endpoint que receberá usuários
 @app.post('/users/', status_code=201, response_model=UserPublic)
-def create_user(user: UserSchema):
-    user_with_id = UserDB(id=(len(database) + 1), **user.model_dump())
-
-    database.append(user_with_id)
-
-    return UserPublic(
-        id=user_with_id.id, username=user.username, email=user.email
+def create_user(user: UserSchema, session: Session = Depends(get_session)):
+    db_user = session.scalar(
+        select(User).where(User.username) == user.username
     )
+
+    if db_user:
+        raise HTTPException(
+            status_code=404, detail='Username already registered'
+        )
+
+    db_user = User(
+        username=user.username, password=user.password, email=user.email
+    )
+
+    session.add(db_user)
+    session.commit()
+    session.refresh(db_user)
+
+    return db_user
 
 
 @app.get('/users/', response_model=UserList)
