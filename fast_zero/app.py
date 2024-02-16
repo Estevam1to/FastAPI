@@ -90,3 +90,11 @@ def delete_user(user_id: int, session: Session = Depends(get_session)):
     session.commit()
 
     return {'message': 'User deleted'}
+
+
+# @app.get('/user/{user_id}')
+# def read_user(user_id: int):
+#     if user_id > len(database) or user_id < 1:
+#         raise HTTPException(status_code=404, detail='User not found')
+
+#     return {'user': database[user_id - 1]}

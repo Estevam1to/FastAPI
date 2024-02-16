@@ -50,6 +50,21 @@ def test_create_user(client):
     }
 
 
+def test_create_user_404(client):
+    response = client.post(
+        '/users/',
+        json={
+            'username': 'vasco',
+            'email': 'vascodagama@exemplo.com',
+            'password': 'vascocampeao',
+        },
+    )
+
+    assert response.status_code == 404  # usuário já existe
+
+    assert response.json() == {'detail': 'Username already registered'}
+
+
 def test_read_users(client):
     response = client.get('/users')
     assert response.status_code == 200
