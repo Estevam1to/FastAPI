@@ -20,3 +20,9 @@ class UserPublic(BaseModel):
 
 class UserList(BaseModel):
     users: list[UserPublic]
+
+
+# schema de geração de token
+class Token(BaseModel):
+    access_token: str
+    token_type: str
