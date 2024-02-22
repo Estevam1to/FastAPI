@@ -11,13 +11,14 @@ from fast_zero.security import get_current_user, get_password_hash
 
 router = APIRouter(prefix='/users', tags=['users'])
 
+Session = Annotated[Session, Depends(get_session)]
 CurrentUser = Annotated[User, Depends(get_current_user)]
 
 
 @router.post('/', response_model=UserPublic, status_code=201)
 async def create_user(
     user: UserSchema,
-    session: Session = Annotated[Session, Depends(get_session)],
+    session: Session,
 ):
     db_user = session.scalar(select(User).where(User.email == user.email))
     if db_user:
@@ -38,9 +39,9 @@ async def create_user(
 
 @router.get('/', response_model=UserList)
 async def read_users(
+    session: Session,
     skip: int = 0,
     limit: int = 100,
-    session: Session = Annotated[Session, Depends(get_session)],
 ):
     users = session.scalars(select(User).offset(skip).limit(limit)).all()
     return {'users': users}
@@ -50,8 +51,8 @@ async def read_users(
 async def update_user(
     user_id: int,
     user: UserSchema,
-    session: Session = Annotated[Session, Depends(get_session)],
-    current_user: CurrentUser = Annotated[User, Depends(get_current_user)],
+    current_user: CurrentUser,
+    session: Session,
 ):
     if current_user.id != user_id:
         raise HTTPException(status_code=400, detail='Not enough permissions')
@@ -68,8 +69,8 @@ async def update_user(
 @router.delete('/{user_id}', response_model=Message)
 async def delete_user(
     user_id: int,
-    session: Session = Annotated[Session, Depends(get_session)],
-    current_user: CurrentUser = Annotated[User, Depends(get_current_user)],
+    current_user: CurrentUser,
+    session: Session,
 ):
     if current_user.id != user_id:
         raise HTTPException(status_code=400, detail='Not enough permissions')
