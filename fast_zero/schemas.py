@@ -1,5 +1,7 @@
 from pydantic import BaseModel, ConfigDict, EmailStr
 
+from fast_zero.models import TodoState
+
 
 class Message(BaseModel):
     message: str
@@ -30,3 +32,22 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     username: str | None = None
+
+
+# validar dados de entrada
+class TodoSchema(BaseModel):
+    title: str
+    description: str
+    state: TodoState
+
+
+# validar dados de saída
+class TodoPublic(BaseModel):
+    id: int
+    title: str
+    description: str
+    state: TodoState
+
+
+class TodoList(BaseModel):
+    todos: list[TodoPublic]
