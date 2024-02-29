@@ -39,18 +39,18 @@ def create_todo(
 
 @router.get('/', response_model=TodoList)
 def list_todos(
-    session: Session,
     user: CurrentUser,
-    tittle: str = Query(None),
+    title: str = Query(None),
     description: str = Query(None),
     state: str = Query(None),
     offset: int = Query(None),
     limit: int = Query(None),
+    session: Session = Depends(get_session),
 ):
     query = select(Todo).where(Todo.user_id == user.id)
 
-    if tittle:
-        query = query.filter(Todo.title.contains(tittle))
+    if title:
+        query = query.filter(Todo.title.contains(title))
 
     if description:
         query = query.filter(Todo.description.contains(description))
