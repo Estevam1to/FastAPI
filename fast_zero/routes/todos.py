@@ -1,12 +1,18 @@
 from typing import Annotated
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from fast_zero.database import get_session
 from fast_zero.models import Todo, User
-from fast_zero.schemas import TodoList, TodoPublic, TodoSchema
+from fast_zero.schemas import (
+    Message,
+    TodoList,
+    TodoPublic,
+    TodoSchema,
+    TodoUpdate,
+)
 from fast_zero.security import get_current_user
 
 router = APIRouter()
@@ -15,9 +21,9 @@ CurrentUser = Annotated[User, Depends(get_current_user)]
 
 router = APIRouter(prefix='/todos', tags=['todos'])
 
-
+# endpoint de criação
 @router.post('/', response_model=TodoPublic)
-def create_todo(
+async def create_todo(
     todo: TodoSchema,
     user: CurrentUser,
     session: Session = Depends(get_session),
@@ -37,8 +43,9 @@ def create_todo(
     return db_todo
 
 
+# endpoint de leitura
 @router.get('/', response_model=TodoList)
-def list_todos(
+async def list_todos(
     user: CurrentUser,
     title: str = Query(None),
     description: str = Query(None),
@@ -61,3 +68,46 @@ def list_todos(
     todos = session.scalars(query.offset(offset).limit(limit)).all()
 
     return {'todos': todos}
+
+
+# endpoint de atualização, patch modifica apenas parte do objeto
+@router.patch('/{todo_id}', response_model=TodoPublic)
+async def patch_todo(
+    todo_id: int,
+    user: CurrentUser,
+    todo: TodoUpdate,
+    session: Session = Depends(get_session),
+):
+    db_todo = session.scalar(
+        select(Todo).where(Todo.user_id == user.id, Todo.id == todo_id)
+    )
+
+    if not db_todo:
+        raise HTTPException(status_code=404, detail='Task not found.')
+
+    for key, value in todo.model_dump(exclude_unset=True).items():
+        setattr(db_todo, key, value)
+
+    session.add(db_todo)
+    session.commit()
+    session.refresh(db_todo)
+
+    return db_todo
+
+
+# endpoint de deleção
+@router.delete('/{todo_id}', response_model=Message)
+async def delete_todo(
+    todo_id: int, user: CurrentUser, session: Session = Depends(get_session)
+):
+    todo = session.scalar(
+        select(Todo).where(Todo.id == todo_id, Todo.user_id == user.id)
+    )
+
+    if not todo:
+        raise HTTPException(status_code=404, detail='Task not found.')
+
+    session.delete(todo)
+    session.commit()
+
+    return {'message': 'Task has been deleted successfully.'}
