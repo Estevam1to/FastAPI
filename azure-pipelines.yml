@@ -1,19 +1,30 @@
-# Starter pipeline
-# Start with a minimal pipeline that you can customize to build and deploy your code.
-# Add steps that build, run tests, deploy, and more:
-# https://aka.ms/yaml
+name: Pipeline
 
-trigger:
-- main
-
+# Pool de agentes que será usado para a execução do pipeline
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+# Equivalente ao -> on : [push, pull_request]
+trigger:
+  branches:
+    include:
+      - main
+pr:
+  branches:
+    include:
+      - main
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+# Instalar Python
+stages:
+  - stage: InstalarPython
+    jobs:
+      - job: PythonVersion
+        steps:
+        - task: UsePythonVersion@0
+          inputs:
+            versionSpec: '3.11.1'
+            disableDownloadFromRegistry: true
+            addToPath: true
+            architecture: 'x64'
+
+
