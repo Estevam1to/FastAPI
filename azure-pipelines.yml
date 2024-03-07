@@ -16,7 +16,7 @@ pr:
 
 # Instalar Python
 stages:
-  - stage: InstalarPython
+  - stage: InstallPythonAndDependencies
     jobs:
       - job: PythonVersion
         steps:
@@ -26,5 +26,14 @@ stages:
             disableDownloadFromRegistry: true
             addToPath: true
             architecture: 'x64'
+      - job: InstallPoetry
+        steps:
+          - script: conda install -c conda-forge python=3.11.^
+      - job: InstallDependencies
+        steps:
+          - script: poetry install
+      - job: ExecTests
+        steps:
+          - script: poetry run task test
 
 
