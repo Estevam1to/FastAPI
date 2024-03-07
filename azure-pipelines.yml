@@ -22,7 +22,7 @@ stages:
         steps:
         - task: UsePythonVersion@0
           inputs:
-            versionSpec: '3.11.8'
+            versionSpec: '3.11'
             disableDownloadFromRegistry: true
             addToPath: true
             architecture: 'x64'
