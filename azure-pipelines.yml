@@ -38,5 +38,8 @@ jobs:
     # Instalar Dependências
     - script: poetry install
 
+     # Formatar código
+    - script: poetry run task format
+
     # Executar testes
     - script: poetry run task test
