@@ -37,7 +37,10 @@ stages:
     - job: InstalarDependenciasPoetry
       dependsOn: InstalarPoetry 
       steps:
-        - script: poetry install
+        - script: |
+            poetry --version
+            echo $PATH
+            poetry install
 # Executar testes 
     - job: ExecutarTestes
       dependsOn: InstalarDependenciasPoetry  
