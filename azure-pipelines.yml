@@ -32,19 +32,11 @@ stages:
     - job: InstalarPoetry
       dependsOn: InstalarPython
       steps: 
-        - script: curl -sSL https://install.python-poetry.org | python3 -
-# Inicializar Poetry
-    - job: InicializarPoetry
-      dependsOn: InstalarPoetry 
-      steps:
-        - script: poetry init
-# Instalar Dependências
-    - job: InstalarDependenciasPoetry
-      dependsOn: InicializarPoetry 
-      steps:
-        - script: poetry install
+        - script: 
+            curl -sSL https://install.python-poetry.org | python3 -
+            poetry install
 # Executar testes 
     - job: ExecutarTestes
-      dependsOn: InstalarDependenciasPoetry  
+      dependsOn: InstalarPoetry  
       steps:
         - script: poetry run task test  
