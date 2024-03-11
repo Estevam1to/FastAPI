@@ -1,39 +1,42 @@
-name: Pipeline
+# Nome da pipeline
+name: MinhaPipeline
 
-# Pool de agentes que será usado para a execução do pipeline
+# Pool de agentes (assumindo ambiente Ubuntu)
 pool:
   vmImage: ubuntu-latest
 
-# Equivalente ao -> on : [push, pull_request]
+# Gatilho: executa a pipeline em push para a branch 'main' e pull requests
 trigger:
   branches:
     include:
       - main
 pr:
-  branches:
-    include:
-      - main
+    branches:
+      include:
+        - main
 
-# Instalar Python
 stages:
-  - stage: InstallPythonAndDependencies
-    jobs:
-      - job: PythonVersion
-        steps:
-        - task: UsePythonVersion@0
-          inputs:
-            versionSpec: '3.11'
-            disableDownloadFromRegistry: true
-            addToPath: true
-            architecture: 'x64'
-      - job: InstallPoetry
-        steps:
-          - script: conda install -c conda-forge python=3.11.^
-      - job: InstallDependencies
-        steps:
-          - script: poetry install
-      - job: ExecTests
-        steps:
-          - script: poetry run task test
-
-
+- stage: ConfigurandoProjeto
+# Instalar Python
+  jobs:
+  - job: InstalarPython
+    steps:
+      - task: UsePythonVersion@0  
+        inputs:
+          versionSpec: '3.11'
+          architecture: 'x64' 
+# Instalar Poetry
+  - job: InstalarPoetry
+    dependsOn: InstalarPython
+    steps: 
+      - script: pip install poetry
+# Instalar Dependências
+  - job: InstalarDependenciasPoetry
+    dependsOn: InstalarPoetry 
+    steps:
+      - script: poetry install
+# Executar testes 
+  - job: ExecutarTestes
+    dependsOn: InstalarDependenciasPoetry  
+    steps:
+      - script: poetry run task test  
