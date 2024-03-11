@@ -15,7 +15,6 @@ pr:
       include:
         - main
 
-
 jobs:
 - job: BuildTest
   # Checkout code
@@ -35,8 +34,10 @@ jobs:
 
     # Instalar Dependências
     - script: poetry install
-
-    - script: echo "Testando variável $(ACCESS_TOKEN_EXPIRE_MINUTES)"
-
+      env:
+        DATABASE_URL: $(DATABASE_URL)
+        SECRET_KEY: $(SECRET_KEY)
+        ALGORITHM: $(ALGORITHM)
+        ACCESS_TOKEN_EXPIRE_MINUTES: $(ACCESS_TOKEN_EXPIRE_MINUTES)
     # Executar testes
     - script: poetry run task test
