@@ -16,30 +16,32 @@ pr:
         - main
 
 jobs:
-- job: BuildTest
+  - job: BuildTest
+    variables:
+      DATABASE_URL: $(DATABASE_URL)
+      SECRET_KEY: $(SECRET_KEY)
+      ALGORITHM: $(ALGORITHM)
+      ACCESS_TOKEN_EXPIRE_MINUTES: $(ACCESS_TOKEN_EXPIRE_MINUTES)
 
-  # Checkout code
-  steps:
-    - checkout: self
+    # Checkout code
+    steps:
+      - checkout: self
 
-- job: InstalarPython
-  steps:
-    # Instalar Python
-    - task: UsePythonVersion@0  
-      inputs:
-        versionSpec: '3.11'
-        architecture: 'x64'
-        
-    # Instalar Poetry
-    - script: |
-        curl -sSL https://install.python-poetry.org | python3 -
-        poetry install
-        
-    # Instalar Dependências
-    - script: poetry install
+      # Instalar Python
+      - task: UsePythonVersion@0
+        inputs:
+          versionSpec: '3.11'
+          architecture: 'x64'
 
-     # Formatar código
-    - script: poetry run task format
+      # Instalar Poetry
+      - script: |
+          curl -sSL https://install.python-poetry.org | python3 -
 
-    # Executar testes
-    - script: poetry run task test
+      # Instalar Dependências
+      - script: poetry install
+
+      # Formatar código (assuming poetry run task format exists)
+      - script: poetry run task format
+
+      # Executar testes
+      - script: poetry run task test
