@@ -17,26 +17,29 @@ pr:
 
 stages:
 - stage: ConfigurandoProjeto
-# Instalar Python
   jobs:
-  - job: InstalarPython
-    steps:
-      - task: UsePythonVersion@0  
-        inputs:
-          versionSpec: '3.11'
-          architecture: 'x64' 
+    - job: CopiarArquivosDoProjeto
+      steps:
+        - checkout: self
+# Instalar Python
+    - job: InstalarPython
+      steps:
+        - task: UsePythonVersion@0  
+          inputs:
+            versionSpec: '3.11'
+            architecture: 'x64' 
 # Instalar Poetry
-  - job: InstalarPoetry
-    dependsOn: InstalarPython
-    steps: 
-      - script: pip install poetry
+    - job: InstalarPoetry
+      dependsOn: InstalarPython
+      steps: 
+        - script: pip install poetry
 # Instalar Dependências
-  - job: InstalarDependenciasPoetry
-    dependsOn: InstalarPoetry 
-    steps:
-      - script: poetry install
+    - job: InstalarDependenciasPoetry
+      dependsOn: InstalarPoetry 
+      steps:
+        - script: poetry install
 # Executar testes 
-  - job: ExecutarTestes
-    dependsOn: InstalarDependenciasPoetry  
-    steps:
-      - script: poetry run task test  
+    - job: ExecutarTestes
+      dependsOn: InstalarDependenciasPoetry  
+      steps:
+        - script: poetry run task test  
