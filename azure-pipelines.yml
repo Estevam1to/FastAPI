@@ -23,11 +23,6 @@ jobs:
     - checkout: self
 
 - job: ExecutarProjeto
-  variables:
-      DATABASE_URL: $(DATABASE_URL)
-      SECRET_KEY: $(SECRET_KEY)
-      ALGORITHM: $(ALGORITHM)
-      ACCESS_TOKEN_EXPIRE_MINUTES: $(ACCESS_TOKEN_EXPIRE_MINUTES)
   steps:
     # Instalar Python
     - task: UsePythonVersion@0  
