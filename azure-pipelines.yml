@@ -12,7 +12,7 @@ resources:
         POSTGRES_USER: app_user
         POSTGRES_PASSWORD: app_password
       ports:
-        - '5432:5432'
+        - 5432:5432
 
 # Pool de agentes (assumindo ambiente Ubuntu)
 pool:
