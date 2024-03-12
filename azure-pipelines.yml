@@ -5,6 +5,19 @@ name: Pipeline
 pool:
   vmImage: ubuntu-latest
 
+resources:
+  containers:
+    - container: db
+      image: postgres
+      volumes:
+          - 'pgdata:/var/lib/postgresql/data'
+      env:
+        POSTGRES_DB: app_db
+        POSTGRES_USER: app_user
+        POSTGRES_PASSWORD: app_password
+      ports:
+        - '5432:5432'
+
 # Gatilho: executa a pipeline em push para a branch 'main' e pull requests
 trigger:
   branches:
@@ -14,7 +27,6 @@ pr:
     branches:
       include:
         - main
-
 
 jobs:
 - job: BuildTest
@@ -32,8 +44,7 @@ jobs:
         
     # Instalar Poetry
     - script: curl -sSL https://install.python-poetry.org | python3 -
-     
-    - script: docker-compose -f docker-compose.yaml up -d postgres
+
     # Instalar Dependências
     - script: poetry install
       
