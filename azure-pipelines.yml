@@ -33,7 +33,7 @@ jobs:
     # Instalar Poetry
     - script: curl -sSL https://install.python-poetry.org | python3 -
      
-    - script: docker-compose -f docker-compose.yml up -d postgres
+    - script: docker-compose -f docker-compose.yaml up -d postgres
     # Instalar Dependências
     - script: poetry install
       
