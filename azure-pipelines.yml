@@ -17,12 +17,11 @@ pr:
 
 jobs:
 - job: BuildTest
-
   # Checkout code
   steps:
     - checkout: self
 
-- job: InstalarPython
+- job: ExecutarProjeto
   steps:
     # Instalar Python
     - task: UsePythonVersion@0  
@@ -31,15 +30,10 @@ jobs:
         architecture: 'x64'
         
     # Instalar Poetry
-    - script: |
-        curl -sSL https://install.python-poetry.org | python3 -
-        poetry install
-        
+    - script: curl -sSL https://install.python-poetry.org | python3 -
+
     # Instalar Dependências
     - script: poetry install
-
-     # Formatar código
-    - script: poetry run task format
-
+      
     # Executar testes
     - script: poetry run task test
