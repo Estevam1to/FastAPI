@@ -32,6 +32,8 @@ jobs:
     # Instalar Poetry
     - script: curl -sSL https://install.python-poetry.org | python3 -
 
+    - script: curl -sSL https://install.python-poetry.org | python3 -
+
     # Instalar Dependências
     - script: poetry install
       
