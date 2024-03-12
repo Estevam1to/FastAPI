@@ -15,6 +15,7 @@ pr:
       include:
         - main
 
+
 jobs:
 - job: BuildTest
   # Checkout code
@@ -31,9 +32,8 @@ jobs:
         
     # Instalar Poetry
     - script: curl -sSL https://install.python-poetry.org | python3 -
-
-    - script: curl -sSL https://install.python-poetry.org | python3 -
-
+     
+    - script: docker-compose -f docker-compose.yml up -d postgres
     # Instalar Dependências
     - script: poetry install
       
