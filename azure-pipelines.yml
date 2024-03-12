@@ -1,6 +1,19 @@
 # Nome da pipeline
 name: Pipeline
 
+resources:
+  containers:
+    - container: db
+      image: postgres
+      volumes:
+          - 'pgdata:/var/lib/postgresql/data'
+      env:
+        POSTGRES_DB: app_db
+        POSTGRES_USER: app_user
+        POSTGRES_PASSWORD: app_password
+      ports:
+        - 5432:5432
+
 # Pool de agentes (assumindo ambiente Ubuntu)
 pool:
   vmImage: ubuntu-latest
@@ -30,8 +43,6 @@ jobs:
         architecture: 'x64'
         
     # Instalar Poetry
-    - script: curl -sSL https://install.python-poetry.org | python3 -
-
     - script: curl -sSL https://install.python-poetry.org | python3 -
 
     # Instalar Dependências
