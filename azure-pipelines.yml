@@ -35,7 +35,7 @@ jobs:
   - name: DATABASE_URL
     value: postgresql://app_user:app_password@localhost:5432/app_db
   - name: SECRET_KEY
-    value: your-secret-key"
+    value: your-secret-key
     
   steps:
     - checkout: self
