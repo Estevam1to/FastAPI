@@ -27,16 +27,6 @@ jobs:
       ports:
         - "$(POSTGRES_PORT):$(POSTGRES_PORT)"  
  
-  variables:
-  - name: ACCESS_TOKEN_EXPIRE_MINUTES
-    value: 30
-  - name: ALGORITHM
-    value: HS256
-  - name: DATABASE_URL
-    value: postgresql://app_user:app_password@localhost:5432/app_db
-  - name: SECRET_KEY
-    value: "your-secret-key"
-    
   steps:
     - checkout: self
     
