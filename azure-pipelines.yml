@@ -26,6 +26,16 @@ jobs:
         POSTGRES_USER: $(POSTGRES_USER)
       ports:
         - "$(POSTGRES_PORT):$(POSTGRES_PORT)"
+  variables:
+    - name: ACCESS_TOKEN_EXPIRE_MINUTES
+      value: $(ACCESS_TOKEN_EXPIRE_MINUTES)
+    - name: ALGORITHM
+      value: $(ALGORITHM)
+    - name : DATABASE_URL
+      value: $(DATABASE_URL)
+    - name: SECRET_KEY
+      value: $(SECRET_KEY)
+  
   steps:
     - checkout: self
     
