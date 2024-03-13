@@ -1,19 +1,6 @@
 # Nome da pipeline
 name: Pipeline
 
-resources:
-  containers:
-    - container: db
-      image: postgres
-      volumes:
-          - 'pgdata:/var/lib/postgresql/data'
-      env:
-        POSTGRES_DB: $(POSTGRES_DB)
-        POSTGRES_USER: $(POSTGRES_USER)
-        POSTGRES_PASSWORD: $(POSTGRES_PASSWORD)
-      ports:
-        - $(POSTGRES_PORT):$(POSTGRES_PORT)
-
 # Pool de agentes (assumindo ambiente Ubuntu)
 pool:
   vmImage: ubuntu-latest
@@ -30,12 +17,18 @@ pr:
 
 jobs:
 - job: BuildTest
-  # Checkout code
+  services:
+    postgres:
+      image: postgres:latest
+      env:
+        POSTGRES_DB: app_db
+        POSTGRES_PASSWORD: app_password
+        POSTGRES_USER: app_user
+      ports:
+        - "5432:5432"
   steps:
     - checkout: self
-
-- job: ExecutarProjeto
-  steps:
+    
     # Instalar Python
     - task: UsePythonVersion@0  
       inputs:
